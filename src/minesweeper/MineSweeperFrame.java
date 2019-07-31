@@ -17,6 +17,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     
     public int [][] board; // Board contains the tiles
     JToggleButton[][] tile; // Tile is the square that users can click on
+    private int bombs = 10; // Number of bombs on the board
     
     /**
      * Creates new form MineSweeperFrame
@@ -56,9 +57,9 @@ public class MineSweeperFrame extends javax.swing.JFrame {
      * -1: Tile has a bomb
      * -2: Tile is opened but does not have a bomb
      */
-    private void reval(){
-        for(int i = 0; i<9; i++) {
-            for(int j = 0; j<9; j++) {
+    private void reval(int i, int j){
+//        for(int i = 0; i<9; i++) {
+//            for(int j = 0; j<9; j++) {
                 // Tile is not opened
                if(board[i][j] == 0) {  
                    tile[i][j].setText("");
@@ -75,14 +76,38 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                    tile[i][j].setSelected(true);
                }
 //               if(!canPlay && block[i][j] == -1) tiles[i][j].setSelected(true);
-            }
-        }
+//            }
+//        }
         jPanel1.repaint();
+    }
+    
+    private void spawn(int y, int x){
+        for(int k = 1; k<=bombs; k++){
+            int i, j;
+            do {
+                i = (int)(Math.random()*(10-.01));
+                j = (int)(Math.random()*(10-.01));
+            }
+            while(board[i][j] == -1 || (i == y && j == x)); 
+                board[i][j] = -1;  
+        }
     }
     
     ActionListener listen = new ActionListener(){
       public void actionPerformed(ActionEvent e) {
-          reval();
+        boolean found = false; // Found tile that is selected
+        int i = 0, j =0;
+        for(i = 0; i < 9; i++){
+            for(j = 0; j < 9; j++){
+                if(e.getSource() == tile[i][j]){
+                     found = true;
+                     break;
+                }
+            }
+            if(found) break;
+        }
+        spawn(i, j);
+        reval(i, j);
       }  
     };
 
