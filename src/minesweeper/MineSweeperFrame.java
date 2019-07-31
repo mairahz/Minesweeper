@@ -15,8 +15,8 @@ import java.awt.event.ActionListener;
  */
 public class MineSweeperFrame extends javax.swing.JFrame {
     
-    public int [][] board;
-    JToggleButton[][] tile;
+    public int [][] board; // Board contains the tiles
+    JToggleButton[][] tile; // Tile is the square that users can click on
     
     /**
      * Creates new form MineSweeperFrame
@@ -28,12 +28,25 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         for (int i = 0; i<9; i++) {
             for (int j = 0; j<9; j++) {
                 tile[i][j]= new JToggleButton();
-                tile[i][j].setSize(jPanel1.getWidth()/10, jPanel1.getHeight()/10);
+                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
                 jPanel1.add(tile[i][j]);
-                tile[i][j].setLocation(j*jPanel1.getWidth()/10, i*jPanel1.getHeight()/10);
+                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
 //                tiles[i][j].addActionListener(listen);
             }
         }          
+    }
+    
+    /**
+     * Function that resizes the board to fit the panel
+     */
+    private void resize() {
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
+                jPanel1.add(tile[i][j]);
+                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
+            }
+        }
     }
 
     /**
@@ -50,6 +63,11 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                jPanel1ComponentResized(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -81,6 +99,10 @@ public class MineSweeperFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
+        resize();
+    }//GEN-LAST:event_jPanel1ComponentResized
 
     /**
      * @param args the command line arguments
