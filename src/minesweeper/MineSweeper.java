@@ -16,6 +16,9 @@ public class MineSweeper {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        MineSweeperFrame MSF = new MineSweeperFrame();
+        MSF.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Sets the application to full screen
+        MSF.show();
     }
     
 }
