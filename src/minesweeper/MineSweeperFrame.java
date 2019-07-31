@@ -48,6 +48,43 @@ public class MineSweeperFrame extends javax.swing.JFrame {
             }
         }
     }
+    
+     /**
+     * Function that revalidate the board.
+     * 0: Tile is not opened
+     * 1 - 8: Number of bombs around it
+     * -1: Tile has a bomb
+     * -2: Tile is opened but does not have a bomb
+     */
+    private void reval(){
+        for(int i = 0; i<9; i++) {
+            for(int j = 0; j<9; j++) {
+                // Tile is not opened
+               if(board[i][j] == 0) {  
+                   tile[i][j].setText("");
+                   tile[i][j].setSelected(false); // Leave unopened
+               } 
+               // Tile is opened, no bomb
+               if(board[i][j] == -2) {
+                   tile[i][j].setText("");
+                   tile[i][j].setSelected(true); // Leave opened and cannot be unclicked
+               }
+               // Bomb is nearby
+               if(board[i][j] > 0){
+                   tile[i][j].setText(""+board[i][j]); // Shows number of bomb neaby
+                   tile[i][j].setSelected(true);
+               }
+//               if(!canPlay && block[i][j] == -1) tiles[i][j].setSelected(true);
+            }
+        }
+        jPanel1.repaint();
+    }
+    
+    ActionListener listen = new ActionListener(){
+      public void actionPerformed(ActionEvent e) {
+          reval();
+      }  
+    };
 
     /**
      * This method is called from within the constructor to initialize the form.
