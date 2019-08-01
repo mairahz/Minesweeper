@@ -17,7 +17,8 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     
     public int [][] board; // Board contains the tiles
     JToggleButton[][] tile; // Tile is the square that users can click on
-    private int bombs = 10; // Number of bombs on the board
+    private final int bombs = 10; // Number of bombs on the board
+    boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
     
     /**
      * Creates new form MineSweeperFrame
@@ -32,9 +33,11 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
                 jPanel1.add(tile[i][j]);
                 tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
-//                tiles[i][j].addActionListener(listen);
+                tile[i][j].addActionListener(listen);
             }
-        }          
+        }  
+        firstMove = false; // First move has not been made.
+        canPlay = true; // Player can start to play the game.
     }
     
     /**
@@ -75,40 +78,74 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                    tile[i][j].setText(""+board[i][j]); // Shows number of bomb neaby
                    tile[i][j].setSelected(true);
                }
-//               if(!canPlay && block[i][j] == -1) tiles[i][j].setSelected(true);
+               if(!canPlay && board[i][j] == -1) tile[i][j].setSelected(true);
 //            }
 //        }
         jPanel1.repaint();
     }
     
+    /**
+     * Function that spawns the bombs randomly.
+     * It ensures that the bombs are not spawned on the same tile.
+     * Make sure bomb is not spawned on the first tile that user clicked on.
+     */
     private void spawn(int y, int x){
         for(int k = 1; k<=bombs; k++){
             int i, j;
             do {
-                i = (int)(Math.random()*(10-.01));
-                j = (int)(Math.random()*(10-.01));
+                i = (int)(Math.random()*(9-.01));
+                j = (int)(Math.random()*(9-.01));
             }
             while(board[i][j] == -1 || (i == y && j == x)); 
-                board[i][j] = -1;  
+                board[i][j] = -1; 
+                tile[i][j].setText("BOMB");
         }
     }
     
+//    private void open(int y, int x){
+//        if(y < 0 || x < 0 || x > 10-1 || y > 10-1 || board[y][x] != 0) return;
+//        int bomb = 0;
+//        for (int i = y - 1; i <= y + 1;i++) {
+//            for (int j = x - 1; j <= x + 1;j++) {
+//                if(!(j < 0 || i < 0 || j > 10-1 || i > 10-1) && board[i][j] == -1) {
+//                    bomb++;
+//                }
+//            }
+//        }
+//        if(bomb == 0){
+//            board[y][x] = -2;
+//            for (int i = y - 1; i <= y + 1;i++) {
+//                for (int j = x - 1; j <= x + 1;j++) {
+//                    if(!(j < 0 || i < 0 || j > 10-1 || i > 10-1))
+//                    if(i != y || j !=x) open(i,j);
+//                }
+//            }
+//        } else board[y][x] = bomb;
+//    }
+    
     ActionListener listen = new ActionListener(){
-      public void actionPerformed(ActionEvent e) {
-        boolean found = false; // Found tile that is selected
-        int i = 0, j =0;
-        for(i = 0; i < 9; i++){
-            for(j = 0; j < 9; j++){
-                if(e.getSource() == tile[i][j]){
-                     found = true;
-                     break;
+        public void actionPerformed(ActionEvent e) {
+            boolean found = false; // Found tile that is selected
+            int i = 0, j =0;
+            for(i = 0; i < 9; i++){
+                for(j = 0; j < 9; j++){
+                    if(e.getSource() == tile[i][j]){
+                         found = true;
+                         break;
+                    }
+                }
+                if(found) break;
+            }
+            if(canPlay){
+                tile[i][j].setSelected(true);
+                if(!firstMove){
+                    spawn(i, j);
+                    firstMove = true;
                 }
             }
-            if(found) break;
-        }
-        spawn(i, j);
-        reval(i, j);
-      }  
+            
+            reval(i, j);
+        }  
     };
 
     /**
