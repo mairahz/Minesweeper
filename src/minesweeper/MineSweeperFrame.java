@@ -98,7 +98,6 @@ public class MineSweeperFrame extends javax.swing.JFrame {
             }
             while(board[i][j] == -1 || (i == y && j == x)); 
                 board[i][j] = -1; 
-                tile[i][j].setText("BOMB");
         }
     }
     
@@ -127,6 +126,23 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         } else board[y][x] = bomb;
     }
     
+    /**
+     * Function that sets board when player loses.
+     * Message pops out saying that player loses and shows location of the bombs.
+     */
+    private void lose(){
+        canPlay = false;
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] == -1){
+                    tile[i][j].setText("BOOM");
+                    tile[i][j].setSelected(true);
+                }
+            }
+        }
+        javax.swing.JOptionPane.showMessageDialog(null, "You LOSE!!!");
+    }
+    
     ActionListener listen = new ActionListener(){
         public void actionPerformed(ActionEvent e) {
             boolean found = false; // Found tile that is selected
@@ -151,7 +167,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 if(board[i][j] != -1){
                     open(i, j);
                     reval(i, j);
-                }
+                } else lose();
             }
         }  
     };
