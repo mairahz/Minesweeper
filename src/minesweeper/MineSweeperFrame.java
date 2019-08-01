@@ -102,31 +102,36 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         }
     }
     
-//    private void open(int y, int x){
-//        if(y < 0 || x < 0 || x > 10-1 || y > 10-1 || board[y][x] != 0) return;
-//        int bomb = 0;
-//        for (int i = y - 1; i <= y + 1;i++) {
-//            for (int j = x - 1; j <= x + 1;j++) {
-//                if(!(j < 0 || i < 0 || j > 10-1 || i > 10-1) && board[i][j] == -1) {
-//                    bomb++;
-//                }
-//            }
-//        }
-//        if(bomb == 0){
-//            board[y][x] = -2;
-//            for (int i = y - 1; i <= y + 1;i++) {
-//                for (int j = x - 1; j <= x + 1;j++) {
-//                    if(!(j < 0 || i < 0 || j > 10-1 || i > 10-1))
-//                    if(i != y || j !=x) open(i,j);
-//                }
-//            }
-//        } else board[y][x] = bomb;
-//    }
+    /**
+     * Function that checks the number of bombs around the tile.
+     */
+    private void open(int y, int x){
+        // if bomb is not near or tile is opened or has a bomb, returns the function.
+        if(y < 0 || x < 0 || x > 8 || y > 8 || board[y][x] != 0) return;
+        int bomb = 0;
+        for (int i = y - 1; i <= y + 1;i++) {
+            for (int j = x - 1; j <= x + 1;j++) {
+                if(!(j < 0 || i < 0 || j > 8 || i > 8) && board[i][j] == -1) {
+                    bomb++;
+                }
+            }
+        }
+        if(bomb == 0){
+            board[y][x] = -2; // tile has no bomb around
+            for (int i = y - 1; i <= y + 1;i++) {
+                for (int j = x - 1; j <= x + 1;j++) {
+                    if(!(j < 0 || i < 0 || j > 8 || i > 8))
+                    if(i != y || j !=x) open(i,j);
+                }
+            }
+        } else board[y][x] = bomb;
+    }
     
     ActionListener listen = new ActionListener(){
         public void actionPerformed(ActionEvent e) {
             boolean found = false; // Found tile that is selected
             int i = 0, j =0;
+            // Find tile that player has selected.
             for(i = 0; i < 9; i++){
                 for(j = 0; j < 9; j++){
                     if(e.getSource() == tile[i][j]){
@@ -136,15 +141,18 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 }
                 if(found) break;
             }
+            // Check if game can be played.
             if(canPlay){
                 tile[i][j].setSelected(true);
                 if(!firstMove){
                     spawn(i, j);
                     firstMove = true;
                 }
+                if(board[i][j] != -1){
+                    open(i, j);
+                    reval(i, j);
+                }
             }
-            
-            reval(i, j);
         }  
     };
 
