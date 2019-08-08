@@ -19,6 +19,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     JToggleButton[][] tile; // Tile is the square that users can click on
     private final int bombs = 10; // Number of bombs on the board
     boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
+    java.util.Timer timer = new java.util.Timer(); // Timer to keep score
     
     /**
      * Creates new form MineSweeperFrame
@@ -60,9 +61,9 @@ public class MineSweeperFrame extends javax.swing.JFrame {
      * -1: Tile has a bomb
      * -2: Tile is opened but does not have a bomb
      */
-    private void reval(int i, int j){
-//        for(int i = 0; i<9; i++) {
-//            for(int j = 0; j<9; j++) {
+    private void reval(){
+        for(int i = 0; i<9; i++) {
+            for(int j = 0; j<9; j++) {
                 // Tile is not opened
                if(board[i][j] == 0) {  
                    tile[i][j].setText("");
@@ -79,8 +80,8 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                    tile[i][j].setSelected(true);
                }
                if(!canPlay && board[i][j] == -1) tile[i][j].setSelected(true);
-//            }
-//        }
+            }
+        }
         jPanel1.repaint();
     }
     
@@ -178,18 +179,24 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 }
                 if(found) break;
             }
+
             // Check if game can be played.
             if(canPlay){
                 tile[i][j].setSelected(true);
                 if(!firstMove){
                     spawn(i, j);
+                    Score.startScore(jLabel1, canPlay, firstMove);
                     firstMove = true;
                 }
                 if(board[i][j] != -1){
                     open(i, j);
-                    reval(i, j);
+                    reval();
                 } else lose();
+                checkWin();
+            } else {
+                reval();
             }
+            
         }  
     };
 
@@ -203,6 +210,12 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -221,8 +234,54 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 195, Short.MAX_VALUE)
         );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Score"));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("0");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jMenu1.setText("Game");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("New Game");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Help");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -230,13 +289,17 @@ public class MineSweeperFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -247,6 +310,21 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
         resize();
     }//GEN-LAST:event_jPanel1ComponentResized
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        board = new int[9][9];
+        reval();
+        canPlay = true;
+        firstMove = false;
+        jLabel1.setText("0");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(null, "<html><body><p style='width: 200px;'>Click on any tile to start the game. </br> Open all"
+                + " tiles without a bomb in it to win the game. </br> If you open a tile containing a bomb, you lose! </br>"
+                + " The number on the tile represents the number of bombs near the tile. </br> The bomb could be "
+                + "to the left, right, above, below or any diagonals of the tile so be careful. </br> Have fun</p></body></html>");
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,6 +362,12 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }
