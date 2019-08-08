@@ -143,6 +143,27 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(null, "You LOSE!!!");
     }
     
+    /**
+     * Function that sets board when player wins.
+     * Message pops out saying that player wins.
+     */
+    private void checkWin(){
+        boolean win = true;
+        for(int i = 0; i < 9; i ++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] == 0){
+                    win = false;
+                    break;
+                }
+            }
+            if(!win) break;
+        }
+        if(win){
+            javax.swing.JOptionPane.showMessageDialog(null, "You win!!!");
+            canPlay = false; 
+        }
+    }
+    
     ActionListener listen = new ActionListener(){
         public void actionPerformed(ActionEvent e) {
             boolean found = false; // Found tile that is selected
