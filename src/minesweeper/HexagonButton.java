@@ -9,7 +9,7 @@ import java.awt.*;
 
 /**
  *
- * @author user
+ * @author Mairah
  */
 public class HexagonButton extends JToggleButton {
     private static final long serialVersionUID = 1L;
@@ -33,6 +33,19 @@ public class HexagonButton extends JToggleButton {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Polygon hex = new Polygon();
+        for (int i = 0; i < SIDES; i++){
+            hex.addPoint((int) (50 + SIDE_LENGTH*Math.cos(i * 2 * Math.PI/SIDES)),
+                    (int) (50 + SIDE_LENGTH * Math.sin(i*2*Math.PI/SIDES)));
+        }
+        g.drawPolygon(hex);
+    }
+    
+    public int getRow(){
+        return row;
         
+    }
+    
+    public int getCol(){
+        return col;
     }
 }
