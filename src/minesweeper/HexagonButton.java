@@ -5,6 +5,7 @@
  */
 package minesweeper;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -18,4 +19,20 @@ public class HexagonButton extends JToggleButton {
     public static final int WIDTH = 105;
     private int row = 0;
     private int col = 0;
+    
+    public HexagonButton(int row, int col){
+        setContentAreaFilled(false);
+        setFocusPainted(true);
+        setBorderPainted(false);
+        setPreferredSize(new Dimension(WIDTH, LENGTH));
+        this.row = row;
+        this.col = col;
+    }
+    
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        Polygon hex = new Polygon();
+        
+    }
 }
