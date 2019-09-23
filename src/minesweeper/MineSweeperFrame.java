@@ -18,7 +18,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     public int [][] board; // Board contains the tiles
     String ver = "square"; // Version of the game
     JToggleButton[][] tile; // Tile is the square that users can click on
-//    HexagonButton[][] tile;
+    HexagonButton[][] hexTile;
     private final int bombs = 10; // Number of bombs on the board
     boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
     java.util.Timer timer = new java.util.Timer(); // Timer to keep score
@@ -28,34 +28,56 @@ public class MineSweeperFrame extends javax.swing.JFrame {
      */
     public MineSweeperFrame() {
         initComponents();
-//        int offsetX = -10;
-//        int offsetY = 0;
+        hexPattern();
 //        
-        board = new int[9][9];
-//        tile = new HexagonButton[9][9];
-        tile = new JToggleButton[9][9];
-        for (int i = 0; i<9; i++) {
-            for (int j = 0; j<9; j++) {
-//                tile[i][j] = new HexagonButton(i, j);
-                tile[i][j]= new JToggleButton();
-                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
-                jPanel1.add(tile[i][j]);
-                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
-                tile[i][j].addActionListener(listen);
-//                tile[i][j].setBounds(offsetY, offsetX, 105, 95);
-//                offsetX += 87;
-            }
-//            if(i%2 == 0){
-//                System.out.print("mod 2");
-//                offsetX = -52;
-//            } else {
-//                System.out.print("Not");
-//                offsetX = -10;
+//        board = new int[9][9];
+////        tile = new HexagonButton[9][9];
+//        tile = new JToggleButton[9][9];
+//        for (int i = 0; i<9; i++) {
+//            for (int j = 0; j<9; j++) {
+////                tile[i][j] = new HexagonButton(i, j);
+//                tile[i][j]= new JToggleButton();
+//                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
+//                jPanel1.add(tile[i][j]);
+//                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
+//                tile[i][j].addActionListener(listen);
+////                tile[i][j].setBounds(offsetY, offsetX, 105, 95);
+////                offsetX += 87;
 //            }
-//            offsetY += 76;
-        }  
+////            if(i%2 == 0){
+////                System.out.print("mod 2");
+////                offsetX = -52;
+////            } else {
+////                System.out.print("Not");
+////                offsetX = -10;
+////            }
+////            offsetY += 76;
+//        }  
         firstMove = false; // First move has not been made.
         canPlay = true; // Player can start to play the game.
+    }
+    
+    private void hexPattern(){
+        int offsetX = -10;
+        int offsetY = 0;
+        board = new int[9][9];
+        hexTile = new HexagonButton[9][9];
+        for (int i = 0; i<9; i++) {
+            for (int j = 0; j<9; j++) {
+                hexTile[i][j] = new HexagonButton(i, j);
+                hexTile[i][j].addActionListener(listen);
+                jPanel1.add(hexTile[i][j]);
+                hexTile[i][j].setBounds(offsetY, offsetX, 105, 95);
+                offsetX += 87;
+            }
+            if(i%2 == 0){
+                offsetX = -52;
+            } else {
+                offsetX = -10;
+            }
+            offsetY += 76;
+        }  
+        
     }
     
     /**
