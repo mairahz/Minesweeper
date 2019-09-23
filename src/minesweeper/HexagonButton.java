@@ -37,7 +37,10 @@ public class HexagonButton extends JToggleButton {
             hex.addPoint((int) (50 + SIDE_LENGTH*Math.cos(i * 2 * Math.PI/SIDES)),
                     (int) (50 + SIDE_LENGTH * Math.sin(i*2*Math.PI/SIDES)));
         }
+        
         g.drawPolygon(hex);
+        g.setColor(Color.red);
+        g.fillPolygon(hex);
     }
     
     public int getRow(){

@@ -19,7 +19,6 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     boolean hexVer = false; // Version of the game
     JToggleButton[][] tile; // Tile is the square that users can click on
     HexagonButton[][] hexTile; // Hexagon tiles
-    private final int bombs = 10; // Number of bombs on the board
     boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
     java.util.Timer timer = new java.util.Timer(); // Timer to keep score
     
@@ -37,6 +36,9 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         canPlay = true; // Player can start to play the game.
     }
     
+    /**
+     * Function that creates square pattern of the board
+     */
     private void squarePattern(){
         board = new int[9][9];
         tile = new JToggleButton[9][9];
@@ -122,23 +124,6 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }
     
     /**
-     * Function that spawns the bombs randomly.
-     * It ensures that the bombs are not spawned on the same tile.
-     * Make sure bomb is not spawned on the first tile that user clicked on.
-     */
-    private void spawn(int y, int x){
-        for(int k = 1; k<=bombs; k++){
-            int i, j;
-            do {
-                i = (int)(Math.random()*(9-.01));
-                j = (int)(Math.random()*(9-.01));
-            }
-            while(board[i][j] == -1 || (i == y && j == x)); 
-                board[i][j] = -1; 
-        }
-    }
-    
-    /**
      * Function that checks the number of bombs around the tile.
      */
     private void open(int y, int x){
@@ -220,7 +205,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
             if(canPlay){
                 tile[i][j].setSelected(true);
                 if(!firstMove){
-                    spawn(i, j);
+                    Score.spawn(i, j, board);
                     Score.startScore(jLabel1, canPlay, firstMove);
                     firstMove = true;
                 }
