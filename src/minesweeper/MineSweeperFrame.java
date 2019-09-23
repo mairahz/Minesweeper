@@ -16,9 +16,9 @@ import java.awt.event.ActionListener;
 public class MineSweeperFrame extends javax.swing.JFrame {
     
     public int [][] board; // Board contains the tiles
-    String ver = "square"; // Version of the game
+    boolean hexVer = false; // Version of the game
     JToggleButton[][] tile; // Tile is the square that users can click on
-    HexagonButton[][] hexTile;
+    HexagonButton[][] hexTile; // Hexagon tiles
     private final int bombs = 10; // Number of bombs on the board
     boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
     java.util.Timer timer = new java.util.Timer(); // Timer to keep score
@@ -28,7 +28,11 @@ public class MineSweeperFrame extends javax.swing.JFrame {
      */
     public MineSweeperFrame() {
         initComponents();
-        hexPattern();
+        if(hexVer){
+            hexPattern();
+        } else {
+            squarePattern();
+        }
 //        
 //        board = new int[9][9];
 ////        tile = new HexagonButton[9][9];
@@ -55,6 +59,20 @@ public class MineSweeperFrame extends javax.swing.JFrame {
 //        }  
         firstMove = false; // First move has not been made.
         canPlay = true; // Player can start to play the game.
+    }
+    
+    private void squarePattern(){
+        board = new int[9][9];
+        tile = new JToggleButton[9][9];
+        for (int i = 0; i<9; i++) {
+            for (int j = 0; j<9; j++) {
+                tile[i][j]= new JToggleButton();
+                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
+                jPanel1.add(tile[i][j]);
+                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
+                tile[i][j].addActionListener(listen);
+            }
+        }  
     }
     
     private void hexPattern(){
@@ -356,7 +374,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
-        if(ver == "square"){
+        if(!hexVer){
             resize();
         }
     }//GEN-LAST:event_jPanel1ComponentResized
@@ -377,10 +395,18 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        if(ver == "square"){
-            ver = "hex";
+        if(hexVer){
+            hexVer = false;
+            jPanel1.removeAll();
+            squarePattern();
+            revalidate();
+            repaint();
         } else {
-            ver = "square";
+            hexVer = true;
+            jPanel1.removeAll();
+            hexPattern();
+            revalidate();
+            repaint();
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
