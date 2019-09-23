@@ -50,4 +50,22 @@ public class Score {
         }
     }
     
+    /**
+     * Function that sets board when player wins.
+     * Message pops out saying that player wins.
+     */
+    public static boolean checkWin(int[][] board){
+        boolean win = true;
+        for(int i = 0; i < 9; i ++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] == 0){
+                    win = false;
+                    break;
+                }
+            }
+            if(!win) break;
+        }
+        return win;
+    }
+    
 }
