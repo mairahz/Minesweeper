@@ -16,8 +16,9 @@ import java.awt.event.ActionListener;
 public class MineSweeperFrame extends javax.swing.JFrame {
     
     public int [][] board; // Board contains the tiles
-//    JToggleButton[][] tile; // Tile is the square that users can click on
-    HexagonButton[][] tile;
+    String ver = "square"; // Version of the game
+    JToggleButton[][] tile; // Tile is the square that users can click on
+//    HexagonButton[][] tile;
     private final int bombs = 10; // Number of bombs on the board
     boolean firstMove, canPlay; // firstMove checks if the first move has been made. canPlay checks if the game can be played.
     java.util.Timer timer = new java.util.Timer(); // Timer to keep score
@@ -27,32 +28,31 @@ public class MineSweeperFrame extends javax.swing.JFrame {
      */
     public MineSweeperFrame() {
         initComponents();
-        int offsetX = -10;
-        int offsetY = 0;
-        
+//        int offsetX = -10;
+//        int offsetY = 0;
+//        
         board = new int[9][9];
-        tile = new HexagonButton[9][9];
-//        tile = new JToggleButton[9][9];
+//        tile = new HexagonButton[9][9];
+        tile = new JToggleButton[9][9];
         for (int i = 0; i<9; i++) {
             for (int j = 0; j<9; j++) {
-                tile[i][j] = new HexagonButton(i, j);
-//                tile[i][j]= new JToggleButton();
-//                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
-//                jPanel1.add(tile[i][j]);
-//                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
-                tile[i][j].addActionListener(listen);
+//                tile[i][j] = new HexagonButton(i, j);
+                tile[i][j]= new JToggleButton();
+                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
                 jPanel1.add(tile[i][j]);
-                tile[i][j].setBounds(offsetY, offsetX, 105, 95);
-                offsetX += 87;
+                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
+                tile[i][j].addActionListener(listen);
+//                tile[i][j].setBounds(offsetY, offsetX, 105, 95);
+//                offsetX += 87;
             }
-            if(i%2 == 0){
-                System.out.print("mod 2");
-                offsetX = -52;
-            } else {
-                System.out.print("Not");
-                offsetX = -10;
-            }
-            offsetY += 76;
+//            if(i%2 == 0){
+//                System.out.print("mod 2");
+//                offsetX = -52;
+//            } else {
+//                System.out.print("Not");
+//                offsetX = -10;
+//            }
+//            offsetY += 76;
         }  
         firstMove = false; // First move has not been made.
         canPlay = true; // Player can start to play the game.
@@ -61,15 +61,15 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     /**
      * Function that resizes the board to fit the panel
      */
-//    private void resize() {
-//        for (int i=0; i<9; i++) {
-//            for (int j=0; j<9; j++) {
-//                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
-//                jPanel1.add(tile[i][j]);
-//                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
-//            }
-//        }
-//    }
+    private void resize() {
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                tile[i][j].setSize(jPanel1.getWidth()/9, jPanel1.getHeight()/9);
+                jPanel1.add(tile[i][j]);
+                tile[i][j].setLocation(j*jPanel1.getWidth()/9, i*jPanel1.getHeight()/9);
+            }
+        }
+    }
     
      /**
      * Function that revalidate the board.
@@ -233,6 +233,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -296,6 +297,14 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
+        jMenuItem3.setText("Change Version");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -325,7 +334,9 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
-//        resize();
+        if(ver == "square"){
+            resize();
+        }
     }//GEN-LAST:event_jPanel1ComponentResized
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -342,6 +353,14 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 + " The number on the tile represents the number of bombs near the tile. </br> The bomb could be "
                 + "to the left, right, above, below or any diagonals of the tile so be careful. </br> Have fun</p></body></html>");
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        if(ver == "square"){
+            ver = "hex";
+        } else {
+            ver = "square";
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -384,6 +403,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
