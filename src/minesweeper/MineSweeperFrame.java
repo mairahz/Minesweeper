@@ -8,7 +8,7 @@ package minesweeper;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import minesweeper.MineSweeperController;
+
 /**
  *
  * @author mairah
@@ -69,7 +69,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                 jPanel1.add(hexTile[i][j]);
                 hexTile[i][j].setBounds(offsetY, offsetX, 105, 95);
                 offsetX += 87;
-                hexTile[i][j].addActionListener(listen);
+                hexTile[i][j].addActionListener(hexListen);
             }
             if(i%2 == 0){
                 offsetX = -52;
@@ -167,6 +167,18 @@ public class MineSweeperFrame extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(null, "You LOSE!!!");
     }
     
+    private void newGame(){
+        if(!hexVer) {
+            board = new int[9][9];
+        } else {
+            board = new int[27][27];
+        }
+        reval();
+        canPlay = true;
+        firstMove = false;
+        jLabel1.setText("0");
+    }
+    
     ActionListener listen = new ActionListener(){
         public void actionPerformed(ActionEvent e) {
             boolean found = false; // Found tile that is selected
@@ -207,6 +219,50 @@ public class MineSweeperFrame extends javax.swing.JFrame {
             }
             
         }  
+    };
+        
+        ActionListener hexListen = new ActionListener(){
+        public void actionPerformed(ActionEvent e) {
+            boolean found = false; // Found tile that is selected
+            int i = 0, j =0;
+            // Find tile that player has selected.
+            for(i = 0; i < 9; i++){
+                for(j = 0; j < 9; j++){
+                    if(e.getSource() == hexTile[i][j]){
+                         found = true;
+                         break;
+//                    } else if(e.getSource() == hexTile[i][j]){
+//                        found = true;
+//                        break;
+                    }
+                }
+                if(found) break;
+            }
+
+            // Check if game can be played.
+            if(canPlay){
+                hexTile[i][j].setSelected(true); 
+//                hexTile[i][j].setSelected(true);
+                if(!firstMove){
+                    MSC.spawn(i, j, board);
+                    Score.startScore(jLabel1, canPlay, firstMove);
+                    firstMove = true;
+                }
+                if(board[i][j] != -1){
+                    open(i, j);
+                    reval();
+                } else lose();
+                if(MSC.checkWin(board)){
+                    javax.swing.JOptionPane.showMessageDialog(null, "You win!!!");
+                    canPlay = false; 
+                }
+            } else {
+                reval();
+            }
+            
+        } 
+        
+        
     };
 
     /**
@@ -332,11 +388,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1ComponentResized
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        board = new int[9][9];
-        reval();
-        canPlay = true;
-        firstMove = false;
-        jLabel1.setText("0");
+       newGame();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
