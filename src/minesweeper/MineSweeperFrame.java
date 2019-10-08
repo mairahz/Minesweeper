@@ -8,13 +8,14 @@ package minesweeper;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import minesweeper.MineSweeperController;
 /**
  *
  * @author mairah
  */
 public class MineSweeperFrame extends javax.swing.JFrame {
     
+    MineSweeperController MSC = new MineSweeperController();
     public int [][] board; // Board contains the tiles
     boolean hexVer = false; // Version of the game
     JToggleButton[][] tile; // Tile is the square that users can click on
@@ -59,15 +60,16 @@ public class MineSweeperFrame extends javax.swing.JFrame {
     private void hexPattern(){
         int offsetX = -10;
         int offsetY = 0;
-        board = new int[9][9];
-        hexTile = new HexagonButton[9][9];
-        for (int i = 0; i<9; i++) {
-            for (int j = 0; j<9; j++) {
+        board = new int[27][27];
+        hexTile = new HexagonButton[27][27];
+        for (int i = 0; i<27; i++) {
+            for (int j = 0; j<27; j++) {
                 hexTile[i][j] = new HexagonButton(i, j);
-                hexTile[i][j].addActionListener(listen);
+//                hexTile[i][j].addActionListener(listen);
                 jPanel1.add(hexTile[i][j]);
                 hexTile[i][j].setBounds(offsetY, offsetX, 105, 95);
                 offsetX += 87;
+                hexTile[i][j].addActionListener(listen);
             }
             if(i%2 == 0){
                 offsetX = -52;
@@ -175,6 +177,9 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                     if(e.getSource() == tile[i][j]){
                          found = true;
                          break;
+//                    } else if(e.getSource() == hexTile[i][j]){
+//                        found = true;
+//                        break;
                     }
                 }
                 if(found) break;
@@ -182,9 +187,10 @@ public class MineSweeperFrame extends javax.swing.JFrame {
 
             // Check if game can be played.
             if(canPlay){
-                tile[i][j].setSelected(true);
+                tile[i][j].setSelected(true); 
+//                hexTile[i][j].setSelected(true);
                 if(!firstMove){
-                    Score.spawn(i, j, board);
+                    MSC.spawn(i, j, board);
                     Score.startScore(jLabel1, canPlay, firstMove);
                     firstMove = true;
                 }
@@ -192,7 +198,7 @@ public class MineSweeperFrame extends javax.swing.JFrame {
                     open(i, j);
                     reval();
                 } else lose();
-                if(Score.checkWin(board)){
+                if(MSC.checkWin(board)){
                     javax.swing.JOptionPane.showMessageDialog(null, "You win!!!");
                     canPlay = false; 
                 }

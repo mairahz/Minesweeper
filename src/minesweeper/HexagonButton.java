@@ -39,8 +39,8 @@ public class HexagonButton extends JToggleButton {
         }
         
         g.drawPolygon(hex);
-        g.setColor(Color.red);
-        g.fillPolygon(hex);
+//        g.setColor(Color.red);
+//        g.fillPolygon(hex);
     }
     
     public int getRow(){
